@@ -1,38 +1,39 @@
 import requests
 
-# Make sure your FastAPI server is running at this URL
 url = "http://127.0.0.1:8000/process"
 
 try:
-    user_input = input("Enter text : ").strip()
+    user_input = input("Enter text: ").strip()
+    
     if not user_input:
-        print("No input provided, exiting...")
+        print("nothing entered, bye")
         exit()
 
     payload = {"user_input": user_input}
+    resp = requests.post(url, json=payload)
 
-    response = requests.post(url, json=payload)
-
-    if response.status_code == 200:
-        # Try to decode JSON safely
+    if resp.status_code == 200:
         try:
-            data = response.json()
-            print("\nResponse from server:")
-            print(f"Input: {data.get('input')}")
-            print(f"Decision: {data.get('decision')}")
-            print(f"Output: {data.get('output')}")
-            print(f"Latency: {data.get('latency'):.4f} seconds")
+            d = resp.json()
+            print("\n--- Server Response ---")
+            print("Input   :", d.get("input"))
+            print("Decision:", d.get("decision"))
+            print("Output  :", d.get("output"))
+            print(f"Latency : {d.get('latency'):.4f}s")
         except Exception as e:
-            print("[ERROR] Failed to decode JSON:", e)
-            print("Raw response:", response.text)
+            print("json parse failed:", e)
+            print(resp.text)
     else:
-        print(f"Server returned status code {response.status_code}")
-        print("Raw response:", response.text)
+        print("got status:", resp.status_code)
+        print(resp.text)
 
 except requests.exceptions.ConnectionError:
-    print("[ERROR] Could not connect to server. Is FastAPI running?")
+    print("server not running? start FastAPI first")
 
 except Exception as e:
-    print("[ERROR] Unexpected error:", e)
+    print("something broke:", e)
 
-input("\nPress Enter to exit...")
+input("\nenter to exit...")
+
+
+
