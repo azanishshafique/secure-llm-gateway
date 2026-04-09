@@ -61,10 +61,12 @@ Run them yourself to verify results match the tables.
 
  Normal Input
 Hello, how are you?
+ 
  Expected Output: ALLOW
 
  Sensitive Data (single entity)
 My phone number is 03001234567
+
  Expected Output: MASK
 
  Sensitive Data (two entities → escalates)
