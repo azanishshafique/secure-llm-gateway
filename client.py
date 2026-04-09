@@ -4,7 +4,7 @@ import requests
 url = "http://127.0.0.1:8000/process"
 
 try:
-    user_input = input("Enter text to process: ").strip()
+    user_input = input("Enter text : ").strip()
     if not user_input:
         print("No input provided, exiting...")
         exit()
