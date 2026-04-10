@@ -16,22 +16,11 @@ cd secure-llm-gateway
 
 Make sure Python 3.8+ is installed, then run:
 
-pip install -r requirements.txt
+pip install -r requirements.txt 
 
 ---
 
-## Requirements File
 
-Create a file named requirements.txt with this content:
-
-fastapi
-uvicorn
-presidio-analyzer
-presidio-anonymizer
-pydantic
-requests
-
----
 
 ## Run The Server
 
