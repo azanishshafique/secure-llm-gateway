@@ -7,7 +7,7 @@ Detects prompt injection, jailbreak attempts, and sensitive data leakage.
 
 ## Clone Repository
 
-git clone https://github.com/YOUR_USERNAME/secure-llm-gateway.git
+git clone https://github.com/azanishshafique/secure-llm-gateway.git
 cd secure-llm-gateway
 
 ---
@@ -34,9 +34,9 @@ uvicorn app:app --host 127.0.0.1 --port 8000
 
 ## Run The Client
 
-Open another terminal, activate venv again, then run:
+Open another terminal venv is already activated then run only :
 
-venv\Scripts\activate
+
 python client.py
 
 
