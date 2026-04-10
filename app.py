@@ -33,7 +33,6 @@ attacks = [
     "jailbreak system", "circumvent rules", "bypass login"
 ]
 
-
 patterns = {
     "API_KEY": r'API_[A-Za-z0-9]{8,}',
     "ID"     : r'\bID\d{4,}\b',
@@ -42,9 +41,11 @@ patterns = {
     "CREDIT" : r'\b(?:\d[ -]*?){13,16}\b'
 }
 
+
 def detect_injection(txt):
     txt = txt.lower()
     return any(p in txt for p in attacks)
+
 
 def detect_custom_entities(txt):
     res = []
@@ -59,14 +60,14 @@ def detect_custom_entities(txt):
             if key in ["API_KEY", "CREDIT"]:
                 sc = min(0.95, 0.5 + len(m) / 30)
             elif key in ["ID", "EMP_ID", "PHONE"]:
-                sc = min(0.95, 0.5 + len(m)/25)
+                sc = min(0.95, 0.5 + len(m) / 25)
             else:
                 sc = min(0.95, 0.5 + len(m) / 30)
 
             res.append({
                 "entity_type": key,
                 "value": m,
-                "score" : sc
+                "score": sc
             })
 
     return res
@@ -77,44 +78,51 @@ def process(data: InputData):
     msg = data.user_input or ""
     t0 = time.time()
 
+    # step 1 - check for attacks
     atck = detect_injection(msg)
 
+    # step 2 - presidio analysis
     try:
         pres_results = analyzer.analyze(text=msg, language="en")
     except Exception as e:
         print("presidio broke:", e)
         pres_results = []
 
+    # step 3 - filter presidio results
     clean_pres = []
     for r in pres_results:
         try:
+            entity_text = msg[r.start:r.end]
             if (
-                hasattr(r, "text")
-                and r.text
+                entity_text
+                and r.entity_type != "EMAIL_ADDRESS"
                 and r.score >= THRESHOLD
             ):
                 clean_pres.append({
                     "entity_type": r.entity_type,
-                    "value": r.text,
+                    "value": entity_text,
                     "score": r.score
                 })
         except Exception as e:
             print("skipping bad entity:", e)
 
+    # step 4 - custom entity detection
     cust = detect_custom_entities(msg)
 
+    # step 5 - merge both results
     all_sens = clean_pres.copy()
     for c in cust:
         if c not in all_sens:
             all_sens.append(c)
 
-  
+    # debug prints
     print(f"\nthreshold = {THRESHOLD}")
     for e in clean_pres:
-        print(f"[presidio] {e['entity_type']} | {e['value']} | score: {e.get('score',1.0):.2f}")
+        print(f"[presidio] {e['entity_type']} | {e['value']} | score: {e.get('score', 1.0):.2f}")
     for e in cust:
-        print(f"[custom]   {e['entity_type']} | {e['value']} | score: {e.get('score',1.0):.2f}")
+        print(f"[custom]   {e['entity_type']} | {e['value']} | score: {e.get('score', 1.0):.2f}")
 
+    # step 6 - policy decision
     n = len(all_sens)
     out = msg
     dec = "ALLOW"
