@@ -41,17 +41,9 @@ python client.py
 
 
 
-## Run The Server
 
-uvicorn app:app --reload
 
-## Run The Client
 
-Open another terminal and run:
-
-python client.py
-
----
 
 ## How To Test
 
