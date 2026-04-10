@@ -16,7 +16,7 @@ cd secure-llm-gateway
 
 Make sure Python 3.8+ is installed, then run:
 
-pip install -r requirements.txt 
+pip install fastapi uvicorn presidio-analyzer presidio-anonymizer pydantic requests
 
 ---
 
