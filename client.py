@@ -3,13 +3,13 @@ import requests
 url = "http://127.0.0.1:8000/process"
 
 try:
-    user_input = input("Enter text: ").strip()
-    
-    if not user_input:
+    usr_in = input("Enter text : ").strip()
+
+    if not usr_in:
         print("nothing entered, bye")
         exit()
 
-    payload = {"user_input": user_input}
+    payload = {"user_input": usr_in}
     resp = requests.post(url, json=payload)
 
     if resp.status_code == 200:
@@ -34,6 +34,5 @@ except Exception as e:
     print("something broke:", e)
 
 input("\nenter to exit...")
-
 
 
