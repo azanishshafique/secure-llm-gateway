@@ -14,11 +14,30 @@ cd secure-llm-gateway
 
 ## Installation
 
-Make sure Python 3.8+ is installed, then run:
+Make sure Python 3.8+ is installed.
 
+Step 1 - Create virtual environment:
+python -m venv venv
+
+Step 2 - Activate virtual environment:
+venv\Scripts\activate
+
+Step 3 - Install required packages:
 pip install fastapi uvicorn presidio-analyzer presidio-anonymizer pydantic requests
 
----
+Step 4 - Download spacy language model:
+python -m spacy download en_core_web_sm
+
+## Run The Server
+
+uvicorn app:app --host 127.0.0.1 --port 8000
+
+## Run The Client
+
+Open another terminal, activate venv again, then run:
+
+venv\Scripts\activate
+python client.py
 
 
 
